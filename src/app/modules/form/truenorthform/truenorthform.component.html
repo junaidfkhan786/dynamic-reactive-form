@@ -1,0 +1,73 @@
+<div class="p-2">
+    <mat-card class="mat-elevation-z4">
+        <div *ngIf="JsonFormData">
+            <form [formGroup]="Form">
+                <div formArrayName="section">
+                    <ng-container *ngFor="let item of JsonFormData.section; index as i">
+                        <div [formGroupName]="i">
+                            <div>
+                                <b>{{item.name}}</b>
+                            </div>
+                            <div formArrayName="group">
+                                <ng-container *ngFor="let group of item.group; index as j">
+                                    <div [formGroupName]="j">
+                                        <ul>
+                                            <li>
+                                                <b>{{group.name}}</b>
+                                            </li>
+                                            <div formArrayName="parameters">
+                                                <ng-container *ngFor="let parameters of group.parameters;index as k">
+                                                    <div class="mt-4" [formGroupName]="k">
+                                                        <mat-label style="opacity: 0.6; font-size: 12px;">{{parameters.name}}</mat-label>
+                                                        <div *ngIf="parameters.field_type == 'input'">
+                                                            <mat-form-field class="w-100" color="primary">
+                                                                <input matInput [formControlName]="'value'">
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div *ngIf="parameters.field_type == 'radio_buttons'">
+                                                            <mat-radio-group color="primary" style="margin-left: -10px;" [formControlName]="'value'">
+                                                                <mat-radio-button class="ms-2 mt-2" *ngFor="let radioValue of parameters.options"  [value]="radioValue.value">{{radioValue.label}}</mat-radio-button>                                                              
+                                                            </mat-radio-group>
+                                                        </div>
+                                                        <div *ngIf="parameters.field_type == 'slider'">
+                                                            <div class="row align-items-baseline">
+                                                                <div class="col">
+
+                                                                    <mat-slider min="1" max="10" color="primary"
+                                                                        class="w-100" [value]="" step="1" #slider
+                                                                        thumbLabel tickInterval="1"                                                                    
+                                                                        [formControlName]="'value'"></mat-slider>
+                                                                </div>
+                                                                <div class="col-1">
+                                                                 <mat-card>
+                                                                    {{slider.value}}
+                                                                 </mat-card>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </ng-container>
+                                            </div>
+
+                                        </ul>
+                                    </div>
+
+                                </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="text-end">
+                    <button mat-raised-button color="primary"  style="border-radius: 30px;" >SAVE</button>
+                    <button mat-raised-button color="primary" class="ms-2" [disabled]="Form.invalid" style="border-radius: 30px;" (click)="submitForm()">CALCULATE</button>
+                
+                </div>
+            </form>
+        </div>
+<pre>
+    {{Form.value | json}}
+</pre>
+    </mat-card>
+</div>
